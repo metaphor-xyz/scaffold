@@ -4,7 +4,9 @@
   "description": "Linters, formatters, and generators for Metaphor projects",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "node build/lint.js \"src/**/*.{ts,tsx,js,jsx}\"",
+    "fix": "node build/lint.js --fix \"src/**/*.{ts,tsx,js,jsx}\""
   },
   "repository": {
     "type": "git",
@@ -37,6 +39,8 @@
   },
   "devDependencies": {
     "@types/command-line-args": "^5.2.0",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
     "typescript": "^4.4.3"
   }
 }
