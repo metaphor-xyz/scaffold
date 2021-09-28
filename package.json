@@ -1,0 +1,42 @@
+{
+  "name": "@metaphorxyz/scaffold",
+  "version": "1.0.0",
+  "description": "Linters, formatters, and generators for Metaphor projects",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbdao/config.git"
+  },
+  "author": "Metaphor",
+  "license": "MIT",
+  "bin": {
+    "eslint": "build/lint.js"
+  },
+  "bugs": {
+    "url": "https://github.com/tbdao/config/issues"
+  },
+  "homepage": "https://github.com/tbdao/config#readme",
+  "dependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^2.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
+    "command-line-args": "^5.2.0",
+    "eslint": "^7.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-import": "^2.24.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/command-line-args": "^5.2.0",
+    "typescript": "^4.4.3"
+  }
+}
