@@ -1,5 +1,5 @@
 {
-  "name": "@metaphorxyz/scaffold",
+  "name": "@metaphor-xyz/scaffold",
   "version": "1.0.0",
   "description": "Linters, formatters, and generators for Metaphor projects",
   "main": "src/index.ts",
