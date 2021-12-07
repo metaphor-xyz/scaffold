@@ -12,6 +12,7 @@ const helperProjectDir = dirname(require.resolve(helperFilePath));
 export async function lintEslintWithApi(
   patterns: string[] | null,
   fix: boolean,
+  fixDryRun: boolean,
   format: string,
   stdin?: string,
   stdinFilepath?: string
@@ -21,7 +22,7 @@ export async function lintEslintWithApi(
 
     const eslint = new ESLint({
       cwd: helperProjectDir,
-      fix,
+      fix: fix || fixDryRun,
       baseConfig: {
         parser: "@typescript-eslint/parser",
         env: {
@@ -77,8 +78,7 @@ export async function lintEslintWithApi(
         ? projectIgnorePath
         : undefined,
     });
-    // eslint-disable-next-line no-console
-    console.log(`Performing lint${fix ? " with fix" : ""}`);
+
     let results = null;
 
     if (patterns) {
@@ -101,15 +101,18 @@ export async function lintEslintWithApi(
 
     // eslint-disable-next-line no-console
     console.log(resultText);
+    fs.writeFileSync(path.join(process.cwd(), 'lint-log'), resultText);
 
     for (const r of results) {
-      if (r.warningCount > 0 || r.errorCount > 0) {
+      if ((!fix && !fixDryRun) && (r.warningCount > 0 || r.errorCount > 0)) {
         process.exit(1);
       }
     }
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error("error performing eslint", err);
+    // @ts-ignore
+    fs.writeFileSync(path.join(process.cwd(), 'lint-log'), err.message as string);
     process.exit(1);
   }
 }
@@ -117,19 +120,29 @@ export async function lintEslintWithApi(
 const options = commandLineArgs([
   { name: "patterns", defaultOption: true, multiple: true, type: String },
   { name: "fix", type: Boolean },
+  { name: "fix-dry-run", type: Boolean },
   { name: "stdin", type: Boolean },
   { name: "stdin-filename", type: String },
   { name: "format", alias: "f", type: String, defaultValue: "stylish" },
+  { name: "config", alias: "c", type: String },
+  { name: "version", alias: "v", type: Boolean },
 ]);
+
+if (options.version) {
+  // eslint-disable-next-line no-console
+  console.log(ESLint.version);
+  process.exit(0);
+}
 
 if (options.stdin) {
   lintEslintWithApi(
     null,
     options.fix,
+    options["fix-dry-run"],
     options.format,
     fs.readFileSync(0, "utf-8"),
     options["stdin-filename"]
   );
 } else {
-  lintEslintWithApi(options.patterns, options.fix, options.format);
+  lintEslintWithApi(options.patterns, options.fix, options["fix-dry-run"], options.format);
 }
