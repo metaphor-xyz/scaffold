@@ -1,6 +1,6 @@
 {
   "name": "@metaphor-xyz/scaffold",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Linters, formatters, and generators for Metaphor projects",
   "main": "src/index.ts",
   "scripts": {
@@ -16,7 +16,8 @@
   "author": "Metaphor",
   "license": "MIT",
   "bin": {
-    "eslint": "build/lint.js"
+    "eslint": "build/lint.js",
+    "eslint_d": "build/lint.js"
   },
   "bugs": {
     "url": "https://github.com/tbdao/config/issues"
