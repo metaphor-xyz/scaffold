@@ -101,7 +101,6 @@ export async function lintEslintWithApi(
 
     // eslint-disable-next-line no-console
     console.log(resultText);
-    fs.writeFileSync(path.join(process.cwd(), 'lint-log'), resultText);
 
     for (const r of results) {
       if ((!fix && !fixDryRun) && (r.warningCount > 0 || r.errorCount > 0)) {
@@ -111,8 +110,6 @@ export async function lintEslintWithApi(
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error("error performing eslint", err);
-    // @ts-ignore
-    fs.writeFileSync(path.join(process.cwd(), 'lint-log'), err.message as string);
     process.exit(1);
   }
 }
