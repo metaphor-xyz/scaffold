@@ -13,6 +13,7 @@ export async function lintEslintWithApi(
   patterns: string[] | null,
   fix: boolean,
   fixDryRun: boolean,
+  fixStdout: boolean,
   format: string,
   stdin?: string,
   stdinFilepath?: string
@@ -22,7 +23,7 @@ export async function lintEslintWithApi(
 
     const eslint = new ESLint({
       cwd: helperProjectDir,
-      fix: fix || fixDryRun,
+      fix: fix || fixDryRun || fixStdout,
       baseConfig: {
         parser: "@typescript-eslint/parser",
         env: {
@@ -99,11 +100,20 @@ export async function lintEslintWithApi(
     const formatter = await eslint.loadFormatter(format);
     const resultText = formatter.format(results);
 
-    // eslint-disable-next-line no-console
-    console.log(resultText);
+    if (fixStdout) {
+      if (results[0] && results[0].output) {
+        // eslint-disable-next-line no-console
+        console.log(results[0].output);
+      } else {
+        console.log(stdin);
+      }
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(resultText);
+    }
 
     for (const r of results) {
-      if ((!fix && !fixDryRun) && (r.warningCount > 0 || r.errorCount > 0)) {
+      if ((!fix && !fixDryRun && !fixStdout) && (r.warningCount > 0 || r.errorCount > 0)) {
         process.exit(1);
       }
     }
@@ -118,6 +128,7 @@ const options = commandLineArgs([
   { name: "patterns", defaultOption: true, multiple: true, type: String },
   { name: "fix", type: Boolean },
   { name: "fix-dry-run", type: Boolean },
+  { name: "fix-to-stdout", type: Boolean },
   { name: "stdin", type: Boolean },
   { name: "stdin-filename", type: String },
   { name: "format", alias: "f", type: String, defaultValue: "stylish" },
@@ -136,10 +147,11 @@ if (options.stdin) {
     null,
     options.fix,
     options["fix-dry-run"],
+    options["fix-to-stdout"],
     options.format,
     fs.readFileSync(0, "utf-8"),
     options["stdin-filename"]
   );
 } else {
-  lintEslintWithApi(options.patterns, options.fix, options["fix-dry-run"], options.format);
+  lintEslintWithApi(options.patterns, options.fix, options["fix-dry-run"], options["fix-to-stdout"], options.format);
 }
