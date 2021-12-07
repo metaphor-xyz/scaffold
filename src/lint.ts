@@ -102,10 +102,9 @@ export async function lintEslintWithApi(
 
     if (fixStdout) {
       if (results[0] && results[0].output) {
-        // eslint-disable-next-line no-console
-        console.log(results[0].output);
+        process.stdout.write(results[0].output);
       } else {
-        console.log(stdin);
+        process.stdout.write(stdin || '');
       }
     } else {
       // eslint-disable-next-line no-console
