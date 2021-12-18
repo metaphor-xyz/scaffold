@@ -94,7 +94,7 @@ export async function lintEslintWithApi(
     let results = null;
 
     if (patterns) {
-      const paths = patterns.map((p) => path.join(process.cwd(), p));
+      const paths = patterns.map((p) => path.resolve(process.cwd(), p));
       results = await eslint.lintFiles(paths);
     } else if (stdin) {
       results = await eslint.lintText(stdin, { filePath: stdinFilepath });
