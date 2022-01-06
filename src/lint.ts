@@ -124,7 +124,7 @@ export async function lintEslintWithApi(
     }
 
     for (const r of results) {
-      if ((!fix && !fixDryRun && !fixStdout && !maxWarnings) && (r.warningCount > (maxWarnings || 0) || r.errorCount > 0)) {
+      if (((!fix && !fixDryRun && !fixStdout) || !maxWarnings) && (r.warningCount > (maxWarnings || 0) || r.errorCount > 0)) {
         process.exit(1);
       }
     }
