@@ -15,6 +15,7 @@ export async function lintEslintWithApi(
   fixDryRun: boolean,
   fixStdout: boolean,
   format: string,
+  maxWarnings?: number,
   stdin?: string,
   stdinFilepath?: string
 ) {
@@ -123,7 +124,7 @@ export async function lintEslintWithApi(
     }
 
     for (const r of results) {
-      if ((!fix && !fixDryRun && !fixStdout) && (r.warningCount > 0 || r.errorCount > 0)) {
+      if ((!fix && !fixDryRun && !fixStdout && !maxWarnings) && (r.warningCount > (maxWarnings || 0) || r.errorCount > 0)) {
         process.exit(1);
       }
     }
@@ -143,6 +144,7 @@ const options = commandLineArgs([
   { name: "stdin-filename", type: String },
   { name: "format", alias: "f", type: String, defaultValue: "stylish" },
   { name: "config", alias: "c", type: String },
+  { name: "max-warnings", alias: "w", type: Number },
   { name: "version", alias: "v", type: Boolean },
 ]);
 
@@ -159,9 +161,10 @@ if (options.stdin) {
     options["fix-dry-run"],
     options["fix-to-stdout"],
     options.format,
+    options["max-warnings"],
     fs.readFileSync(0, "utf-8"),
     options["stdin-filename"]
   );
 } else {
-  lintEslintWithApi(options.patterns, options.fix, options["fix-dry-run"], options["fix-to-stdout"], options.format);
+  lintEslintWithApi(options.patterns, options.fix, options["fix-dry-run"], options["fix-to-stdout"], options.format, options["max-warnings"]);
 }
